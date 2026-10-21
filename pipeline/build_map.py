@@ -153,7 +153,7 @@ body.chart-min{--chart-h:34px}body.chart-min #elev svg,body.chart-min #elev .sta
 #logi{position:absolute;top:var(--top-h);left:0;right:0;bottom:0;z-index:1150;overflow-y:auto;background:var(--bg);-webkit-overflow-scrolling:touch}
 #logi .wrap{max-width:720px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));line-height:1.6;font-size:16px}
-#logi h1{font:700 clamp(30px,6vw,42px)/1.02 var(--display);text-transform:uppercase;letter-spacing:.01em;margin:4px 0 6px;text-wrap:balance}
+#logi h1{font:700 clamp(30px,6vw,42px)/1.02 var(--display);text-transform:uppercase;letter-spacing:.01em;margin:4px 0 0;text-wrap:balance}
 #logi .lede{color:var(--muted);margin:0 0 18px;max-width:62ch}
 #logi h2{font:700 23px/1.1 var(--display);text-transform:uppercase;letter-spacing:.03em;margin:34px 0 10px;text-wrap:balance;
   display:flex;align-items:center;gap:10px}
@@ -167,6 +167,7 @@ body.chart-min{--chart-h:34px}body.chart-min #elev svg,body.chart-min #elev .sta
 .glance .key b{color:var(--accent)}
 ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:st}
 ol.steps li{counter-increment:st;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
+ol.steps li > div{padding-top:2px}
 ol.steps li:before{content:counter(st);width:30px;height:30px;border-radius:15px;background:var(--accent);color:var(--panel);
   font:700 16px/30px var(--display);text-align:center}
 ol.steps li > div{min-width:0}
@@ -221,39 +222,20 @@ MVS, PNT = stn('Mount Vernon Square', 'Mt. Vernon Sq'), stn('Pentagon', 'Pentago
 LOGISTICS = f"""
 <div id="logi" hidden>
  <div class="wrap">
-  <div class="eyebrow">Race morning &middot; Sun Oct 25, 2026</div>
   <h1>Logistical considerations</h1>
-  <p class="lede">Getting to the start line, what to wear, pacing, how the course feels mile by mile, and fueling.
-  Tap a station name to see it on the map.</p>
-
-  <div class="glance">
-    <div><b>5:00</b><span>Metro opens early for race day</span></div>
-    <div><b>5:50</b><span>Be at Mt. Vernon Sq station</span></div>
-    <div><b>~6:30</b><span>Arrive at Pentagon station</span></div>
-    <div class="key"><b>7:20</b><span>Start for all runners (AM, EDT)</span></div>
-  </div>
 
   <h2>Getting to the start</h2>
   <ol class="steps">
-    <li><div><span class="t">Drive or Uber to {MVS} Metro station</span>
-      I would recommend driving or Ubering to {MVS} Metro station. Anticipate potentially a longer drive, with road closures
-      along Canal Rd, the GW Parkway, and the Clara Barton Parkway. I would recommend taking Connecticut Ave into the city.</div></li>
-    <li><div><span class="t">Take the Yellow Line from {MVS} to {PNT}</span>
-      From {MVS} station, take the Yellow Line from {MVS} to {PNT} in the Huntington direction.
-      <div class="callout"><b>Note:</b> do not take a Green Line train to Branch Ave. Those do not go to the <b>Pentagon</b> station.</div></div></li>
-    <li><div><span class="t">Arrive at {MVS} at 5:50 AM</span>
-      With trains running every 15 min and it being a ~20 min ride, I would recommend arriving at {MVS} station at 5:50 AM.</div></li>
-    <li><div><span class="t">Get to {PNT} around 6:30 AM</span>
-      This will drop you off at {PNT} station at around 6:30 AM. This might seem like a lot of time, but there will be lines for
+    <li><div>I would recommend driving/Ubering to {MVS} Metro station. Anticipate potentially a longer drive, with road closures
+      along Canal, GW Parkway, and Clara Barton Parkway. I would recommend taking Connecticut Ave into the city.</div></li>
+    <li><div>From {MVS} station, take the Yellow Line from {MVS} to {PNT} in the Huntington direction.
+      <div class="callout">(Note: do not take a Green Line train to Branch Ave. Those do not go to the <b>Pentagon</b> station.)</div></div></li>
+    <li><div>With trains running every 15 min and it being a ~20 min ride, I would recommend arriving at {MVS} station at 5:50 AM.</div></li>
+    <li><div>This will drop you off at {PNT} Station at around 6:30 AM. This might seem like a lot of time, but there will be lines for
       everything (Metro escalators, porta-potties, bag drop-off), plus the ~1 mile walk to the start line.</div></li>
-    <li><div><span class="t">Use the walk to warm up</span>
-      It might seem like a long walk, but that's the perfect opportunity to stretch, warm up, do some strides, and get the blood
+    <li><div>It might seem like a long walk, but that's the perfect opportunity to stretch, warm up, do some strides, and get the blood
       flowing to warm up your legs and core.</div></li>
   </ol>
-  <p style="margin-top:14px">Good to know: Runners Village is in the Pentagon North parking lot, and everyone is screened by security on
-  arrival. Bag check uses the clear plastic bag from packet pickup with the sticker from the back of your bib; drop it at the UPS truck
-  for your bib number and pick it up at the Finish Festival in Rosslyn (Wilson Blvd &amp; N. Lynn St). Pay at the faregates with a
-  SmarTrip card or by tapping a credit card.</p>
 
   <h2>What to wear</h2>
   <div class="tips">
@@ -270,45 +252,40 @@ LOGISTICS = f"""
   a lot of traffic. This can be pretty frustrating, especially for the first few miles when you feel like the field should have spread out
   by now. I expect you'll be stuck in a crowd until around mile 11, going past the Lincoln Memorial. But that also means you get to see a
   lot of fun characters (people juggling, wearing no shoes, wearing costumes).</p>
-  <div class="callout">Also, don't mistake the lollipop sticks with gel on them that they hand out at the beginning for something to eat;
+  <div class="callout">Also, don't mistake the lollipop sticks with gel on them that they hand out at the beginning as being for eating;
     <b>they're Vaseline</b>. I saw one guy make that mistake once.</div>
 
   <h2>Pacing</h2>
   <p><b>The most important thing to ensure your success is to make sure you start the race slower than you think you should, and keep your
   heart rate low.</b> All the factors at the beginning of the race will compound to raise your heart rate (being boxed in by the large crowd,
   needing to take extra steps to weave between people, the big hill at mile 2). Your legs are going to feel amazing and the adrenaline is
-  going to push you to want to go faster, but holding back is key, because once your heart rate starts to creep up early, it's impossible to push it
-  down, and that's only going to fatigue you later.</p>
+  going to push you to want to go faster, but holding back is key, because once your heart rate starts to creep up early, it's impossible to
+  push it down, and that's only going to fatigue you later.</p>
 
   <h2>The course, mile by mile</h2>
   <dl class="miles">
     <div><dt>Miles 10&ndash;19</dt><dd>If you've managed to hold onto a good pace for the first 10 miles, miles 10&ndash;19 are what's worth
-      the price of admission for this race. You get to go past all the monuments and museums, through Hains Point, and you have all the energy
-      of everyone cheering! You should feel really good at this point, and miles 10&ndash;16 especially usually feel like you can run forever.
+      the price of admission for this race. You get to go past all the monuments, museums, through Hains Point, and you have all the energy
+      of everyone cheering! You should feel really good at this point, and especially miles 10&ndash;16 usually feel like you can run forever.
       If something goes wrong at this point though (fatigue, cramps, etc.), you're still more than halfway through the race, and the good vibes
       of being in a crowd can help push you through.</dd></div>
     <div><dt>Miles 19&ndash;22</dt><dd>Miles 19&ndash;22 are kinda boring, and the fatigue really starts to kick in here.</dd></div>
     <div><dt>Mile 23</dt><dd>Mile 23 through Crystal City is fun with everyone cheering for you, and that's where you turn around to head back
       to the Pentagon for the final stretch.</dd></div>
     <div><dt>Miles 24&ndash;26.2</dt><dd>Miles 24&ndash;26 are going to suck, but you'll find some gas to finish strong. Just remember there's a
-      big hill for that last 0.2 miles going up to the finish line, so that's usually a good spot for a big kick to pass everyone else that's
-      completely gassed. After that, you get your medal and a cool reflective blanket.</dd></div>
+      big hill for that last 0.2 miles going up to the finish line, so that's usually a good spot for a big kick for passing everyone else
+      that's completely gassed. After that, you get your medal and a cool reflective blanket.</dd></div>
   </dl>
 
   <h2>Hydration and nutrition</h2>
   <p><b>Only eat what you've been training with.</b> I don't like to feel bloated when I start the race, so I usually have my last big meal
-  be lunch the day before, and have some light dinner and snacks the evening of the day before. I then have a light breakfast (like a slice or two of toast,
-  a banana, some coffee). Do whatever you're used to, though, and don't deviate too much from what your body is used to.</p>
+  be lunch the day before, and have some light dinner and snacks the evening of the day before. I then have a light breakfast (like a slice
+  or two of toast, a banana, some coffee). Do whatever you're used to, though, and don't deviate too much from what your body is used to.</p>
   <p>I usually like to have my first gel/gummy packet at around mile 6, and then have them every 4&ndash;5 miles after. I don't bring water
   with me, although with the crowds, things will slow down at the aid stations (generally I aim for the last volunteers at the aid stations,
   since they will be generally pretty free and the crowd clears out by the time you get to them). I will at least stop at every other water
   stop, but especially at the end, I will grab water at each stop. I would avoid drinking too much water, and if I'm feeling hydrated
   (especially with the cool weather), I'll take a few sips and pour the rest to cool off.</p>
-
-  <p class="src">Times from the <a href="https://www.marinemarathon.com/event/marine-corps-marathon/race-day/" target="_blank" rel="noopener">MCM race-day page</a>
-  and <a href="https://www.marinemarathon.com/event/marine-corps-marathon/travel-hotel/" target="_blank" rel="noopener">MCM travel page</a>
-  (Metro opens at 5 AM on race morning; Arlington Cemetery station opens at 8:30 AM). Train frequency and ride time are estimates;
-  check <a href="https://www.wmata.com" target="_blank" rel="noopener">WMATA</a> for race-day service.</p>
  </div>
 </div>"""
 
