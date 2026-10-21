@@ -1,0 +1,7 @@
+node_modules/
+__pycache__/
+data/raw/*.bin
+data/graph.pkl
+data/roads.geojson
+data/noded_roads.geojson
+*.png
