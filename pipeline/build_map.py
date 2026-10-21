@@ -231,17 +231,18 @@ LOGISTICS = f"""
     <li><div><span class="t">Take the Yellow Line from {MVS} to {PNT}</span>
       From {MVS} station, take the Yellow Line from {MVS} to {PNT} in the Huntington direction.
       <div class="callout">Note: do not take a Green Line train to Branch Ave. Those do not go to the <b>Pentagon</b> station.</div></div></li>
-    <li><div><span class="t">Arrive at {MVS} at 5:50 AM</span>
-      With trains running every 15 min and it being a ~20 min ride, I would recommend arriving at {MVS} station at 5:50 AM.</div></li>
-    <li><div><span class="t">Get to {PNT} around 6:30 AM</span>
-      This will drop you off at {PNT} station at around 6:30 AM. This might seem like a lot of time, but there will be lines for
-      everything (Metro escalators, porta-potties, bag drop-off), plus the ~1 mile walk to the start line.</div></li>
+    <li><div><span class="t">Arrive at {MVS} at 5:30 AM</span>
+      With trains running every 15 min and it being a ~20 min ride, I would recommend arriving at {MVS} station at 5:30 AM.</div></li>
+    <li><div><span class="t">Get to {PNT} around 6:10 AM</span>
+      This will drop you off at {PNT} station at around 6:10 AM. This might seem like a lot of time, but there will be lines for
+      everything (Metro escalators, porta-potties, bag drop-off), plus the ~1 mile walk to the start line.
+      <b>Security is expected to take an extra <span style="white-space:nowrap">15&ndash;40 minutes</span>.</b></div></li>
     <li><div><span class="t">Use the walk to warm up</span>
       It might seem like a long walk, but that's the perfect opportunity to stretch, warm up, do some strides, and get the blood
       flowing to warm up your legs and core.</div></li>
   </ol>
-  <p style="margin-top:14px">Good to know: Runners Village is in the Pentagon North parking lot, and everyone is screened by security on
-  arrival. Bag check uses the clear plastic bag from packet pickup with the sticker from the back of your bib; drop it at the UPS truck
+  <p style="margin-top:14px"><b>Good to know:</b> Runners Village is in the Pentagon North parking lot, and everyone is screened by security on
+  arrival. To get through security, you're required to have your bib on the front of you and your items in your clear plastic bag. Bag check uses the clear plastic bag from packet pickup with the sticker from the back of your bib; drop it at the UPS truck
   for your bib number and pick it up at the Finish Festival in Rosslyn (Wilson Blvd &amp; N. Lynn St).</p>
 
   <h2>What to wear</h2>
@@ -258,9 +259,8 @@ LOGISTICS = f"""
   <p>This race is huge, so it's going to be packed. Especially if you're running at the ~3:30&ndash;4 hour pace mark, you're going to be in
   a lot of traffic. This can be pretty frustrating, especially for the first few miles when you feel like the field should have spread out
   by now. I expect you'll be stuck in a crowd until around mile 11, going past the Lincoln Memorial. But that also means you get to see a
-  lot of fun characters (people juggling, wearing no shoes, wearing costumes).</p>
-  <div class="callout">Also, don't mistake the lollipop sticks with gel on them that they hand out at the beginning for something to eat;
-    <b>they're Vaseline</b>. I saw one guy make that mistake once.</div>
+  lot of fun characters (people juggling, wearing no shoes, wearing costumes). Also, don't mistake the lollipop sticks with gel on them that
+  they hand out at the beginning for something to eat; they're Vaseline. I saw one guy make that mistake once.</p>
 
   <h2>Pacing</h2>
   <p><b>The most important thing to ensure your success is to make sure you start the race slower than you think you should, and keep your
