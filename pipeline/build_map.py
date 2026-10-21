@@ -167,7 +167,6 @@ body.chart-min{--chart-h:34px}body.chart-min #elev svg,body.chart-min #elev .sta
 .glance .key b{color:var(--accent)}
 ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:st}
 ol.steps li{counter-increment:st;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
-ol.steps li > div{padding-top:2px}
 ol.steps li:before{content:counter(st);width:30px;height:30px;border-radius:15px;background:var(--accent);color:var(--panel);
   font:700 16px/30px var(--display);text-align:center}
 ol.steps li > div{min-width:0}
@@ -226,16 +225,24 @@ LOGISTICS = f"""
 
   <h2>Getting to the start</h2>
   <ol class="steps">
-    <li><div>I would recommend driving/Ubering to {MVS} Metro station. Anticipate potentially a longer drive, with road closures
-      along Canal, GW Parkway, and Clara Barton Parkway. I would recommend taking Connecticut Ave into the city.</div></li>
-    <li><div>From {MVS} station, take the Yellow Line from {MVS} to {PNT} in the Huntington direction.
-      <div class="callout">(Note: do not take a Green Line train to Branch Ave. Those do not go to the <b>Pentagon</b> station.)</div></div></li>
-    <li><div>With trains running every 15 min and it being a ~20 min ride, I would recommend arriving at {MVS} station at 5:50 AM.</div></li>
-    <li><div>This will drop you off at {PNT} Station at around 6:30 AM. This might seem like a lot of time, but there will be lines for
+    <li><div><span class="t">Drive or Uber to {MVS} Metro station</span>
+      I would recommend driving or Ubering to {MVS} Metro station. Anticipate potentially a longer drive, with road closures along
+      Canal Rd, the GW Parkway, and the Clara Barton Parkway. I would recommend taking Connecticut Ave into the city.</div></li>
+    <li><div><span class="t">Take the Yellow Line from {MVS} to {PNT}</span>
+      From {MVS} station, take the Yellow Line from {MVS} to {PNT} in the Huntington direction.
+      <div class="callout">Note: do not take a Green Line train to Branch Ave. Those do not go to the <b>Pentagon</b> station.</div></div></li>
+    <li><div><span class="t">Arrive at {MVS} at 5:50 AM</span>
+      With trains running every 15 min and it being a ~20 min ride, I would recommend arriving at {MVS} station at 5:50 AM.</div></li>
+    <li><div><span class="t">Get to {PNT} around 6:30 AM</span>
+      This will drop you off at {PNT} station at around 6:30 AM. This might seem like a lot of time, but there will be lines for
       everything (Metro escalators, porta-potties, bag drop-off), plus the ~1 mile walk to the start line.</div></li>
-    <li><div>It might seem like a long walk, but that's the perfect opportunity to stretch, warm up, do some strides, and get the blood
+    <li><div><span class="t">Use the walk to warm up</span>
+      It might seem like a long walk, but that's the perfect opportunity to stretch, warm up, do some strides, and get the blood
       flowing to warm up your legs and core.</div></li>
   </ol>
+  <p style="margin-top:14px">Good to know: Runners Village is in the Pentagon North parking lot, and everyone is screened by security on
+  arrival. Bag check uses the clear plastic bag from packet pickup with the sticker from the back of your bib; drop it at the UPS truck
+  for your bib number and pick it up at the Finish Festival in Rosslyn (Wilson Blvd &amp; N. Lynn St).</p>
 
   <h2>What to wear</h2>
   <div class="tips">
@@ -252,7 +259,7 @@ LOGISTICS = f"""
   a lot of traffic. This can be pretty frustrating, especially for the first few miles when you feel like the field should have spread out
   by now. I expect you'll be stuck in a crowd until around mile 11, going past the Lincoln Memorial. But that also means you get to see a
   lot of fun characters (people juggling, wearing no shoes, wearing costumes).</p>
-  <div class="callout">Also, don't mistake the lollipop sticks with gel on them that they hand out at the beginning as being for eating;
+  <div class="callout">Also, don't mistake the lollipop sticks with gel on them that they hand out at the beginning for something to eat;
     <b>they're Vaseline</b>. I saw one guy make that mistake once.</div>
 
   <h2>Pacing</h2>
@@ -260,21 +267,22 @@ LOGISTICS = f"""
   heart rate low.</b> All the factors at the beginning of the race will compound to raise your heart rate (being boxed in by the large crowd,
   needing to take extra steps to weave between people, the big hill at mile 2). Your legs are going to feel amazing and the adrenaline is
   going to push you to want to go faster, but holding back is key, because once your heart rate starts to creep up early, it's impossible to
-  push it down, and that's only going to fatigue you later.</p>
+  push it down, and that's only going to fatigue you later. Be especially wary of exerting yourself on that first hill; keep the effort
+  consistent, even if it comes at the cost of speed going up the hill (it means you have a downhill you can blast down right after).</p>
 
   <h2>The course, mile by mile</h2>
   <dl class="miles">
     <div><dt>Miles 10&ndash;19</dt><dd>If you've managed to hold onto a good pace for the first 10 miles, miles 10&ndash;19 are what's worth
-      the price of admission for this race. You get to go past all the monuments, museums, through Hains Point, and you have all the energy
-      of everyone cheering! You should feel really good at this point, and especially miles 10&ndash;16 usually feel like you can run forever.
+      the price of admission for this race. You get to go past all the monuments and museums, through Hains Point, and you have all the energy
+      of everyone cheering! You should feel really good at this point, and miles 10&ndash;16 especially usually feel like you can run forever.
       If something goes wrong at this point though (fatigue, cramps, etc.), you're still more than halfway through the race, and the good vibes
       of being in a crowd can help push you through.</dd></div>
     <div><dt>Miles 19&ndash;22</dt><dd>Miles 19&ndash;22 are kinda boring, and the fatigue really starts to kick in here.</dd></div>
     <div><dt>Mile 23</dt><dd>Mile 23 through Crystal City is fun with everyone cheering for you, and that's where you turn around to head back
       to the Pentagon for the final stretch.</dd></div>
     <div><dt>Miles 24&ndash;26.2</dt><dd>Miles 24&ndash;26 are going to suck, but you'll find some gas to finish strong. Just remember there's a
-      big hill for that last 0.2 miles going up to the finish line, so that's usually a good spot for a big kick for passing everyone else
-      that's completely gassed. After that, you get your medal and a cool reflective blanket.</dd></div>
+      big hill for that last 0.2 miles going up to the finish line, so that's usually a good spot for a big kick to pass everyone else that's
+      completely gassed. After that, you get your medal and a cool reflective blanket.</dd></div>
   </dl>
 
   <h2>Hydration and nutrition</h2>
