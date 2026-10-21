@@ -185,6 +185,20 @@ dl.miles > div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;p
   border:1px solid var(--line);border-radius:10px}
 dl.miles dt{white-space:nowrap;font:700 19px/1.15 var(--display);text-transform:uppercase;letter-spacing:.02em;color:var(--accent);font-variant-numeric:tabular-nums}
 dl.miles dd{margin:0;max-width:62ch}
+/* race-morning timetable: four stops joined by arrows (vertical on phones) */
+.tt{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:6px;margin:18px 0 6px}
+.tt-stop{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.tt-stop.key{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tt-ico{flex:0 0 38px;width:38px;height:38px;border-radius:19px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.tt-stop.key .tt-ico{background:var(--accent);color:var(--panel)}
+.tt-time{font:700 24px/1 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tt-time small{font-size:13px;letter-spacing:.04em}
+.tt-stop.key .tt-time{color:var(--accent)}
+.tt-title{font-weight:700;font-size:14.5px;line-height:1.25;margin-top:2px}
+.tt-desc{font-size:13px;line-height:1.4;color:var(--muted);margin-top:4px}
+.tt-gap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);min-width:46px}
+.tt-arrow{color:var(--accent);display:flex}
+.tt-lbl{font-size:11px;text-align:center;line-height:1.2;max-width:64px}
 #logi .src{font-size:12.5px;color:var(--muted);margin-top:32px;border-top:1px solid var(--line);padding-top:12px}
 #logi a{color:var(--accent)}
 @media (max-width:640px){
@@ -198,6 +212,14 @@ dl.miles dd{margin:0;max-width:62ch}
   .glance{grid-template-columns:repeat(2,minmax(0,1fr))}
   dl.miles > div{grid-template-columns:1fr;gap:4px}
 }
+@media (max-width:860px){
+  .tt{grid-template-columns:1fr;gap:0}
+  .tt-stop{flex-direction:row;align-items:flex-start;gap:12px}
+  .tt-gap{flex-direction:row;justify-content:flex-start;gap:8px;padding:4px 0 4px 10px;min-height:30px}
+  .tt-arrow{transform:rotate(90deg)}
+  .tt-lbl{max-width:none}
+  .tt-time{font-size:28px}.tt-time small{font-size:15px}
+}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 """
 
@@ -209,6 +231,45 @@ TOPBAR = """
     <button role="tab" data-tab="logistics" aria-selected="false">Logistics</button>
   </div>
 </div>"""
+
+def ico(path):
+    return (f'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{path}</svg>')
+
+
+ICON_CAR = ico('<path d="M5 16V11.5L7 6.5h10l2 5V16"/><path d="M3.5 16h17v2.5h-17z"/><path d="M5 11.5h14"/>'
+               '<circle cx="7.5" cy="18.8" r="1.6"/><circle cx="16.5" cy="18.8" r="1.6"/>')
+ICON_TRAIN = ico('<rect x="5" y="3" width="14" height="14" rx="3.5"/><path d="M5 10h14"/><circle cx="8.5" cy="13.5" r="1"/>'
+                 '<circle cx="15.5" cy="13.5" r="1"/><path d="M8 17l-2 4M16 17l2 4"/>')
+ICON_SHIELD = ico('<path d="M12 3l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/>')
+ICON_FLAG = ico('<path d="M5 21V4"/><path d="M5 4h13l-2.5 4.5L18 13H5"/><path d="M9 4v9M13 4v9" stroke-width="1.2"/>')
+ARROW = ('<svg viewBox="0 0 40 16" width="40" height="16" aria-hidden="true"><path d="M2 8h33" stroke="currentColor" stroke-width="2"/>'
+         '<path d="M30 3l6 5-6 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>')
+
+
+def tt_stop(icon, time, title, desc, key=False):
+    return (f'<div class="tt-stop{" key" if key else ""}"><div class="tt-ico">{icon}</div><div class="tt-body">'
+            f'<div class="tt-time">{time.replace(" AM", "<small> AM</small>")}</div><div class="tt-title">{title}</div><div class="tt-desc">{desc}</div></div></div>')
+
+
+def tt_gap(label):
+    return f'<div class="tt-gap"><span class="tt-arrow">{ARROW}</span><span class="tt-lbl">{label}</span></div>'
+
+
+TIMETABLE = ('<div class="tt" role="list" aria-label="Race morning timetable">'
+             + tt_stop(ICON_CAR, '~4:50 AM', 'Leave for Mt. Vernon Sq',
+                       'Drive or Uber in via Connecticut Ave. Closures on Canal Rd, the GW Parkway and the Clara Barton Parkway.')
+             + tt_gap('drive + buffer')
+             + tt_stop(ICON_TRAIN, '5:30 AM', 'Arrive at Mt. Vernon Sq',
+                       'Yellow Line toward Huntington, not a Green Line train to Branch Ave. Trains every ~15 min.')
+             + tt_gap('~20 min ride')
+             + tt_stop(ICON_SHIELD, '~6:10 AM', 'Arrive at Pentagon',
+                       'Lines for escalators, porta-potties and bag drop. Security takes an extra 15&ndash;40 min. Then a ~1 mile walk to warm up.')
+             + tt_gap('~70 min to walk, clear security, warm up')
+             + tt_stop(ICON_FLAG, '7:20 AM', 'Race start',
+                       'Shed your throwaway layer once the gun goes off. Start slower than you think you should.', key=True)
+             + '</div>')
+
 
 YL = '<i aria-hidden="true"></i>'
 
@@ -222,6 +283,7 @@ LOGISTICS = f"""
 <div id="logi" hidden>
  <div class="wrap">
   <h1>Logistical considerations</h1>
+  {TIMETABLE}
 
   <h2>Getting to the start</h2>
   <ol class="steps">
