@@ -198,8 +198,9 @@ dl.miles dd{margin:0;max-width:62ch}
 .sg-time{font:700 26px/1 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
 .sg-time small{font-size:13px;margin-left:3px;letter-spacing:.05em;opacity:.8}
 .sg-place{font:700 15px/1.15 var(--ui);letter-spacing:.01em}
-.sg-cue{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.25;opacity:.88}
-.sg-line{flex:0 0 18px;height:5px;border-radius:3px}
+.sg-cue{display:flex;align-items:flex-start;gap:6px;font-size:12px;line-height:1.3;opacity:.9}
+.sg-line{flex:0 0 18px;height:5px;border-radius:3px;margin-top:6px;align-self:flex-start}
+.sg-ldot{flex:0 0 10px;width:10px;height:10px;border-radius:5px;margin-top:3px;align-self:flex-start}
 #logi .src{font-size:12.5px;color:var(--muted);margin-top:32px;border-top:1px solid var(--line);padding-top:12px}
 #logi a{color:var(--accent)}
 @media (max-width:640px){
@@ -248,21 +249,39 @@ ICON_SHIELD = ico('<path d="M12 3l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V6z
 ICON_FLAG = ico('<path d="M5 21V4"/><path d="M5 4h13l-2.5 4.5L18 13H5"/><path d="M9 4v9M13 4v9" stroke-width="1.2"/>')
 
 
-def sign(icon, dot_bg, dot_fg, time, place, cue, cue_color, key=False):
-    """One wayfinding sign: line-coloured bullet with icon, time, place, and a short cue on a coloured line strip."""
+ICON_GUARD = ('<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor">'
+              '<path d="M7.2 3.2h9.6l-1 3.4H8.2z"/><rect x="8.2" y="6.4" width="7.6" height="1.3"/><path d="M5.2 7.7h4v1.1H6.1z"/>'
+              '<path d="M9.3 8.4h5.4a2.7 2.7 0 0 1-5.4 0z"/>'
+              '<path d="M4.8 21v-5.6c0-1.7 1.3-2.8 3-2.8h8.4c1.7 0 3 1.1 3 2.8V21z"/>'
+              '<path d="M7.8 16.2V21M16.2 16.2V21" stroke="#fff" stroke-width="1.1"/>'
+              '<path d="M15.9 12.8 10 21" stroke="#fff" stroke-width="1.6"/><circle cx="10.2" cy="14.9" r=".8" fill="#fff"/></svg>')
+
+SIGN_BARS = os.environ.get('SIGN_BARS', '0') == '1'   # coloured bar before each sign's cue text
+
+
+def sign(icon, dot_bg, dot_fg, time, place, cue, lead=None, key=False):
+    """One wayfinding sign: line-coloured bullet with icon, time, place, and a short cue.
+    lead: ('bar', colour) shown only when SIGN_BARS, ('dot', colour) always shown, or None."""
     hh, ampm = time.rsplit(' ', 1)
+    mark = ''
+    if lead and lead[0] == 'dot':
+        mark = f'<span class="sg-ldot" style="background:{lead[1]}"></span>'
+    elif lead and lead[0] == 'bar' and SIGN_BARS:
+        mark = f'<span class="sg-line" style="background:{lead[1]}"></span>'
     return (f'<div class="sign{" key" if key else ""}" role="listitem">'
             f'<div class="sg-top"><span class="sg-dot" style="background:{dot_bg};color:{dot_fg}">{icon}</span>'
             f'<span class="sg-time">{hh}<small>{ampm}</small></span></div>'
             f'<div class="sg-place">{place}</div>'
-            f'<div class="sg-cue"><span class="sg-line" style="background:{cue_color}"></span>{cue}</div></div>')
+            f'<div class="sg-cue">{mark}<span>{cue}</span></div></div>')
 
 
 TIMETABLE = ('<div class="tt" role="list" aria-label="Race morning timetable">'
-             + sign(ICON_CAR, '#9aa1ab', '#1d1f22', '~4:50 AM', 'Leave home', 'Drive via Connecticut Ave', '#9aa1ab')
-             + sign(ICON_TRAIN, '#FFD100', '#1d1f22', '5:30 AM', 'Mt. Vernon Sq', 'Yellow Line &rarr; Huntington', '#FFD100')
-             + sign(ICON_SHIELD, '#ffffff', '#1d1f22', '~6:10 AM', 'Pentagon', 'Security 15&ndash;40 min', '#ffffff')
-             + sign(ICON_FLAG, '#1f5bff', '#ffffff', '7:20 AM', 'Race start', 'Start slow', '#1f5bff', key=True)
+             + sign(ICON_CAR, '#9aa1ab', '#1d1f22', '~4:45 AM', 'Leave home', 'Recommended route via Connecticut Ave')
+             + sign(ICON_TRAIN, '#FFD100', '#1d1f22', '5:30 AM', 'Mt. Vernon Sq', 'Yellow Line (Huntington) &rarr; Pentagon',
+                    lead=('dot', '#FFD100'))
+             + sign(ICON_GUARD, '#ffffff', '#1d1f22', '~6:10 AM', 'Pentagon', 'Security 15&ndash;40 min', lead=('bar', '#ffffff'))
+             + sign(ICON_FLAG, '#1f5bff', '#ffffff', '7:20 AM', 'Race start',
+                    'Anticipate ~10 min delay for your wave to cross start line', lead=('bar', '#1f5bff'), key=True)
              + '</div>')
 
 
