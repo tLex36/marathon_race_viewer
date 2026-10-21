@@ -180,6 +180,15 @@ ol.steps .t{font-weight:700;display:block;font-variant-numeric:tabular-nums}
 .tips div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
 .tips h3{margin:0 0 4px;font:700 18px var(--display);text-transform:uppercase;letter-spacing:.03em}
 .tips p{font-size:15px;margin:0}
+/* course diagram: elevation + sections + effort strip */
+.cdia-wrap{margin:0 0 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 12px 8px}
+#course-dia svg{display:block;width:100%}
+.cdia-wrap figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+#course-dia .ax{fill:var(--muted);font:11px var(--ui)} #course-dia .grid{stroke:var(--line)}
+#course-dia .area{fill:var(--accent-soft)} #course-dia .prof{fill:none;stroke:var(--accent);stroke-width:2}
+#course-dia .zlbl{font:700 12.5px var(--ui);fill:var(--fg)} #course-dia .zsub{font:11px var(--ui);fill:var(--muted)}
+#course-dia .call{font:700 12px var(--ui);fill:var(--fg)} #course-dia .elbl{font:700 11px var(--ui);fill:#fff}
+#course-dia .pin{stroke:var(--fg);stroke-width:1.2}
 dl.miles{margin:0;display:grid;gap:10px}
 dl.miles > div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:12px 14px;background:var(--panel);
   border:1px solid var(--line);border-radius:10px}
@@ -347,6 +356,10 @@ LOGISTICS = f"""
   consistent, even if it comes at the cost of speed going up the hill (it means you have a downhill you can blast down right after).</p>
 
   <h2>The course, mile by mile</h2>
+  <figure class="cdia-wrap">
+    <div id="course-dia" role="img" aria-label="Course elevation from start to finish with sections: crowded through mile 11 with a big hill at mile 2, really beautiful miles 13 to 18, a tough stretch miles 19 to 22, a pick-me-up at mile 23, the last push from mile 24, and a final hill to the finish. Below it, an effort strip that stays easy early and builds to a hard finish."></div>
+    <figcaption>Elevation from the course trace (ft). Effort strip shows how hard it should feel, not pace.</figcaption>
+  </figure>
   <dl class="miles">
     <div><dt>Miles 10&ndash;19</dt><dd>If you've managed to hold onto a good pace for the first 10 miles, miles 10&ndash;19 are what's worth
       the price of admission for this race. You get to go past all the monuments and museums, through Hains Point, and you have all the energy
@@ -586,6 +599,88 @@ def build(out_path):
         if (lastHi != null) highlight(lastHi);
       }
       new ResizeObserver(draw).observe(svg);
+
+      // ---------------- Logistics: course diagram (sections, hills, effort)
+      const cdia = document.getElementById('course-dia');
+      const ZONES = [
+        {a: 0, b: 11, t: 'Crowded', s: 'first 11 miles', c: '#8a94a6'},
+        {a: 13, b: 18, t: 'Really beautiful', s: 'monuments, Hains Point', c: '#00B140'},
+        {a: 19, b: 22, t: 'The grind', s: 'miles 19–22', c: '#ED8B00'},
+        {a: 22.6, b: 23.6, t: 'Pick-me-up', s: 'Crystal City', c: '#FFD100'},
+        {a: 24, b: MAXMI, t: 'Last push', s: 'to the finish', c: '#BF0D3E'},
+      ];
+      const EFFORT = [   // perceived effort, 1 (easy) .. 5 (all out)
+        {a: 0, b: 11, l: 1, t: 'Hold back'}, {a: 11, b: 19, l: 2, t: 'Cruise'}, {a: 19, b: 22.6, l: 3, t: 'Grind'},
+        {a: 22.6, b: 24, l: 2, t: 'Lift'}, {a: 24, b: 26, l: 4, t: 'Push'}, {a: 26, b: MAXMI, l: 5, t: 'Dig in'}];
+      const ECOL = ['#3a9d5d', '#3a9d5d', '#6aa53a', '#d98a1c', '#d9541e', '#c0151a'];
+      function drawCourse() {
+        const W = cdia.clientWidth; if (W < 50) return;
+        const small = W < 560;
+        const L = small ? 34 : 44, R = 10;
+        const x = mi => L + (mi / MAXMI) * (W - L - R);
+        // section labels: greedy rows so nothing overlaps
+        const CH = small ? 7.4 : 7.2, rowH = small ? 18 : 32, rowsEnd = [];
+        const lab = ZONES.map(z => {
+          const t = small ? ({'Really beautiful':'Beautiful','The grind':'Grind','Pick-me-up':'Lift','Last push':'Push'}[z.t] || z.t) : z.t;
+          const w = Math.max(t.length * CH, small ? 0 : z.s.length * 6.1);
+          let cx = Math.min(Math.max((x(z.a) + x(z.b)) / 2, L + w / 2), W - R - w / 2);
+          let r = 0; while (rowsEnd[r] !== undefined && cx - w / 2 < rowsEnd[r] + 10) r++;
+          rowsEnd[r] = cx + w / 2;
+          return {z, t, cx, r};
+        });
+        const nRows = rowsEnd.length, ZT = 4, ZH = nRows * rowH + 8;
+        const ECH = 7.8, eRows = [];
+        const elab = EFFORT.map(e => {
+          const w = x(e.b) - x(e.a), m = x(e.a) + w / 2;
+          if (e.t.length * 6.6 + 8 < w) return {e, w, m, inside: true};
+          if (e.t === 'Dig in') return {e, w, m, skip: true};  // the 'Final hill: dig in' callout already says it
+          const tw = e.t.length * ECH;
+          const cx = Math.min(Math.max(m, L + tw / 2), W - R - tw / 2);
+          let r = 0; while (eRows[r] !== undefined && cx - tw / 2 < eRows[r] + 8) r++;
+          eRows[r] = cx + tw / 2;
+          return {e, w, m, cx, r, inside: false};
+        });
+        const PB = 64 + eRows.length * 16;
+        const PT = ZT + ZH + 24, H = PT + (small ? 170 : 160) + PB, EH = 22, ETOP = H - PB + 26;
+        const top = 250, y = ft => PT + (1 - ft / top) * (H - PB - PT);
+        const bandTop = ZT + ZH;
+        let o = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+        lab.forEach(({z, t, cx, r}) => {
+          o += `<rect x="${x(z.a)}" y="${bandTop}" width="${x(z.b) - x(z.a)}" height="${H - PB - bandTop}" fill="${z.c}" opacity=".13"/>`;
+          o += `<rect x="${x(z.a)}" y="${bandTop - 4}" width="${x(z.b) - x(z.a)}" height="4" fill="${z.c}"/>`;
+          const ly = ZT + 13 + r * rowH;
+          const mid = (x(z.a) + x(z.b)) / 2;
+          if (Math.abs(cx - mid) > 4 || r > 0)
+            o += `<line x1="${mid}" y1="${bandTop - 5}" x2="${mid}" y2="${ly + (small ? 4 : 18)}" stroke="${z.c}" stroke-width="1.2"/>`;
+          o += `<text class="zlbl" x="${cx}" y="${ly}" text-anchor="middle">${t}</text>`;
+          if (!small) o += `<text class="zsub" x="${cx}" y="${ly + 14}" text-anchor="middle">${z.s}</text>`;
+        });
+        for (let f = 0; f <= 200; f += 100) {
+          o += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(f)}" y2="${y(f)}"/>`;
+          o += `<text class="ax" x="${L - 5}" y="${y(f) + 4}" text-anchor="end">${f}${small ? '' : ' ft'}</text>`;
+        }
+        for (let mi = 0; mi <= 26; mi += small ? 5 : 2) o += `<text class="ax" x="${x(mi)}" y="${H - PB + 14}" text-anchor="middle">${mi}</text>`;
+        let d = ''; for (let i = 0; i < N; i++) d += (i ? 'L' : 'M') + x(E.mi[i]).toFixed(1) + ',' + y(E.ft[i]).toFixed(1);
+        o += `<path class="area" d="${d}L${x(MAXMI)},${y(0)}L${x(0)},${y(0)}Z"/><path class="prof" d="${d}"/>`;
+        const iHill = E.ft.indexOf(Math.max(...E.ft.slice(0, Math.floor(N / 6))));
+        const hx = x(E.mi[iHill]), hy = y(E.ft[iHill]);
+        o += `<line class="pin" x1="${hx}" y1="${hy - 4}" x2="${hx + 14}" y2="${hy - 16}"/><text class="call" x="${hx + 17}" y="${hy - 14}">Big hill · mile 2${small ? '' : ': keep effort even'}</text>`;
+        const fx = x(MAXMI), fy = y(E.ft[N - 1]);
+        o += `<line class="pin" x1="${fx - 3}" y1="${fy - 4}" x2="${fx - 16}" y2="${fy - 24}"/><text class="call" x="${fx - 19}" y="${fy - 26}" text-anchor="end">Final hill: dig in</text>`;
+        // effort strip: equal height, colour = how hard it should feel; labels inside, or above when the bar is narrow
+        o += `<text class="ax" x="${L - 5}" y="${ETOP + 15}" text-anchor="end">${small ? '' : 'Effort'}</text>`;
+        elab.forEach(({e, w, m, cx, r, inside, skip}) => {
+          o += `<rect x="${x(e.a) + 1}" y="${ETOP}" width="${Math.max(3, w - 2)}" height="${EH}" rx="3" fill="${ECOL[e.l]}"/>`;
+          if (skip) return;
+          if (inside) { o += `<text class="elbl" x="${m}" y="${ETOP + 15}" text-anchor="middle">${e.t}</text>`; return; }
+          const ly = ETOP + EH + 14 + r * 16;
+          if (r > 0 || Math.abs(cx - m) > 3) o += `<line x1="${m}" y1="${ETOP + EH + 1}" x2="${m}" y2="${ly - 10}" stroke="${ECOL[e.l]}" stroke-width="1.2"/>`;
+          o += `<text class="call" x="${cx}" y="${ly}" text-anchor="middle">${e.t}</text>`;
+        });
+        o += '</svg>';
+        cdia.innerHTML = o;
+      }
+      new ResizeObserver(drawCourse).observe(cdia);
 
       // ---------------- runner on the route (chart -> map)
       const runner = L.marker([E.lat[0], E.lon[0]], {icon: L.divIcon({html: RUNNERSVG, className: '', iconSize: [34, 34], iconAnchor: [17, 17]}),
